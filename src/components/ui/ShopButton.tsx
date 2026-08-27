@@ -1,42 +1,50 @@
-// src/components/ui/ShopButton.tsx
-import React from 'react';
-import { TouchableOpacity, ActivityIndicator, StyleSheet, ViewStyle } from 'react-native';
+import React, { memo } from 'react';
+import { TouchableOpacity, ActivityIndicator, StyleSheet } from 'react-native';
 import Typography from './Typography';
 import { COLORS, SIZES } from '../../constants/theme';
 
-interface ButtonProps {
-    text: string;
-    onPressAction: () => void;
-    isProcessing?: boolean;
-    customContainerStyle?: ViewStyle;
+interface Props {
+  title: string;
+  onPress: () => void;
+  isLoading?: boolean;
+  variant?: 'primary' | 'outline';
 }
 
-const ShopButton = ({ text, onPressAction, isProcessing, customContainerStyle }: ButtonProps) => {
-    return (
-        <TouchableOpacity
-            disabled={isProcessing}
-            onPress={onPressAction}
-            style={[styles.btnBase, customContainerStyle]}
-        >
-            {isProcessing ? (
-                <ActivityIndicator color={COLORS.white} />
-            ) : (
-                <Typography color={COLORS.white} style={{ fontWeight: 'bold' }}>
-                    {text}
-                </Typography>
-            )}
-        </TouchableOpacity>
-    );
+const ShopButton = ({ title, onPress, isLoading, variant = 'primary' }: Props) => {
+  const isPrimary = variant === 'primary';
+  return (
+    <TouchableOpacity 
+      style={[styles.button, isPrimary ? styles.primary : styles.outline]} 
+      onPress={onPress}
+      disabled={isLoading}
+    >
+      {isLoading ? (
+        <ActivityIndicator color={isPrimary ? COLORS.surface : COLORS.primary} />
+      ) : (
+        <Typography variant="h2" color={isPrimary ? COLORS.surface : COLORS.primary}>
+          {title}
+        </Typography>
+      )}
+    </TouchableOpacity>
+  );
 };
 
 const styles = StyleSheet.create({
-    btnBase: {
-        backgroundColor: COLORS.primary,
-        height: 48,
-        borderRadius: SIZES.radius,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
+  button: {
+    padding: 12,
+    borderRadius: SIZES.radius,
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'row',
+  },
+  primary: {
+    backgroundColor: COLORS.primary,
+  },
+  outline: {
+    backgroundColor: 'transparent',
+    borderWidth: 1,
+    borderColor: COLORS.primary,
+  },
 });
 
-export default ShopButton;
+export default memo(ShopButton);

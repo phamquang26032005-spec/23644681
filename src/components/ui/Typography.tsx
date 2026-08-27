@@ -1,33 +1,19 @@
-// src/components/ui/Typography.tsx
-import React from "react";
-import { Text, TextStyle, StyleProp } from "react-native";
-import { COLORS, FONTS } from "../../constants/theme";
+import React, { memo } from 'react';
+import { Text, TextProps, StyleSheet } from 'react-native';
+import { FONTS, COLORS } from '../../constants/theme';
 
-type Variant = keyof typeof FONTS;
-
-interface Props {
-    children: React.ReactNode;
-    variant?: Variant;
+interface Props extends TextProps {
+    variant?: keyof typeof FONTS;
     color?: string;
-    style?: StyleProp<TextStyle>;
-    numberOfLines?: number;
+    children: React.ReactNode;
 }
 
-const Typography = ({
-    children,
-    variant = "body1",
-    color = COLORS.text,
-    style,
-    numberOfLines,
-}: Props) => {
+const Typography = ({ variant = 'body', color = COLORS.text, style, children, ...rest }: Props) => {
     return (
-        <Text
-            numberOfLines={numberOfLines}
-            style={[FONTS[variant], { color }, style]}
-        >
+        <Text style={[FONTS[variant], { color }, style]} {...rest}>
             {children}
         </Text>
     );
 };
 
-export default Typography;
+export default memo(Typography);

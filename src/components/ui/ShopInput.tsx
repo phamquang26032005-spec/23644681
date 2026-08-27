@@ -1,36 +1,46 @@
-// src/components/ui/ShopInput.tsx
-import React from 'react';
-import { View, TextInput, StyleSheet, TextInputProps } from 'react-native';
+import React, { memo } from 'react';
+import { View, TextInput, TextInputProps, StyleSheet } from 'react-native';
 import Typography from './Typography';
-import { COLORS, SIZES } from '../../constants/theme';
+import { COLORS, SIZES, FONTS } from '../../constants/theme';
 
-interface InputProps extends TextInputProps {
-    labelTitle?: string;
+interface Props extends TextInputProps {
+    label?: string;
+    error?: boolean;
 }
 
-const ShopInput = ({ labelTitle, ...props }: InputProps) => {
+const ShopInput = ({ label, error, style, ...rest }: Props) => {
     return (
         <View style={styles.container}>
-            {labelTitle && (
-                <Typography color={COLORS.textMuted} style={{ marginBottom: 6 }}>
-                    {labelTitle}
-                </Typography>
-            )}
-            <TextInput placeholderTextColor={COLORS.textMuted} style={styles.inputArea} {...props} />
+            {label && <Typography variant="caption" style={styles.label}>{label}</Typography>}
+            <TextInput
+                style={[
+                    styles.input,
+                    error && styles.inputError,
+                    style
+                ]}
+                placeholderTextColor={COLORS.textLight}
+                {...rest}
+            />
         </View>
     );
 };
 
 const styles = StyleSheet.create({
-    container: { marginBottom: SIZES.padding },
-    inputArea: {
-        height: 48,
+    container: { marginBottom: 12 },
+    label: { marginBottom: 4 },
+    input: {
         borderWidth: 1,
         borderColor: COLORS.border,
         borderRadius: SIZES.radius,
         paddingHorizontal: SIZES.padding,
-        backgroundColor: COLORS.white,
-    }
+        paddingVertical: 12,
+        color: COLORS.text,
+        backgroundColor: COLORS.surface,
+        ...FONTS.body,
+    },
+    inputError: {
+        borderColor: COLORS.error,
+    },
 });
 
-export default ShopInput;
+export default memo(ShopInput);
